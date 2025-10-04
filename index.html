@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vigilance.AI - Advanced Food Quality Intelligence</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #8b5cf6;
+            --primary-dark: #6d28d9;
+            --secondary: #3b82f6;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --dark: #0f172a;
+            --darker: #020617;
+            --light: #f8fafc;
+            --gray: #64748b;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            color: #e2e8f0;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(139, 92, 246, 0.3);
+            padding: 1rem 2rem;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        nav.scrolled {
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -1px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        /* Hero Section */
+        .hero {
+            margin-top: 80px;
+            padding: 4rem 2rem 2rem;
+            text-align: center;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 50%, #10b981 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            letter-spacing: -2px;
+            animation: fadeInUp 0.8s ease;
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            color: #94a3b8;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            animation: fadeInUp 0.8s ease 0.2s backwards;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 2rem;
+            animation: fadeInUp 0.8s ease 0.4s backwards;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+        
+        .stat-label {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        
+        /* Main Analysis Section */
+        .analysis-section {
+            max-width: 1400px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        
+        .upload-card {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(139, 92, 246, 0.3);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.3s;
+        }
+        
+        .upload-card:hover {
+            border-color: rgba(139, 92, 246, 0.6);
+            box-shadow: 0 8px 40px rgba(139, 92, 246, 0.2);
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #f1f5f9;
+        }
+        
+        /* File Upload */
+        .upload-zone {
+            border: 3px dashed rgba(139, 92, 246, 0.5);
+            border-radius: 15px;
+            padding: 3rem 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: rgba(139, 92, 246, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .upload-zone:hover {
+            border-color: var(--primary);
+            background: rgba(139, 92, 246, 0.1);
+            transform: scale(1.02);
+        }
+        
+        .upload-zone.active {
+            border-color: var(--success);
+            background: rgba(16, 185, 129, 0.1);
+        }
+        
+        .upload-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.7;
+        }
+        
+        .upload-text {
+            font-size: 1.1rem;
+            color: #cbd5e1;
+            margin-bottom: 0.5rem;
+        }
+        
+        .upload-hint {
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+        
+        #fileInput {
+            display: none;
+        }
+        
+        /* Camera Styles */
+        .camera-btn {
+            flex: 1;
+            padding: 0.75rem;
+            background: rgba(59, 130, 246, 0.15);
+            color: #3b82f6;
+            border: 2px solid #3b82f6;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .camera-btn:hover {
+            background: rgba(59, 130, 246, 0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+        
+        .camera-container {
+            display: none;
+            margin-top: 1.5rem;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            background: #000;
+        }
+        
+        .camera-container.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        #cameraVideo {
+            width: 100%;
+            max-height: 500px;
+            border-radius: 12px;
+            display: block;
+            background: #000;
+            object-fit: cover;
+        }
+        
+        .capture-btn {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.5);
+            z-index: 10;
+        }
+        
+        .capture-btn:hover {
+            transform: translateX(-50%) scale(1.05);
+            box-shadow: 0 6px 30px rgba(139, 92, 246, 0.7);
+        }
+        
+        .preview-container {
+            margin-top: 1.5rem;
+            display: none;
+        }
+        
+        .preview-container.active {
+            display: block;
+        }
+        
+        .preview-image {
+            width: 100%;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .analyze-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.4);
+        }
+        
+        .analyze-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 30px rgba(139, 92, 246, 0.6);
+        }
+        
+        .analyze-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* Results Section */
+        .results-card {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(139, 92, 246, 0.3);
+            border-radius: 20px;
+            padding: 2rem;
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .results-placeholder {
+            text-align: center;
+            color: #64748b;
+        }
+        
+        .results-placeholder-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        
+        .results-content {
+            display: none;
+            width: 100%;
+        }
+        
+        .results-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .results-header {
+            text-align: center;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid rgba(139, 92, 246, 0.2);
+            margin-bottom: 1.5rem;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .status-optimal {
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+            border: 1.5px solid #10b981;
+        }
+        
+        .status-compromised {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+            border: 1.5px solid #ef4444;
+        }
+        
+        .quality-classification {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0;
+            color: #f1f5f9;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .metric-card {
+            background: rgba(139, 92, 246, 0.08);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .metric-card:hover {
+            background: rgba(139, 92, 246, 0.12);
+            border-color: rgba(139, 92, 246, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        .metric-label {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+        
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .recommendation-box {
+            background: rgba(139, 92, 246, 0.08);
+            border-left: 3px solid var(--primary);
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin: 1rem 0;
+        }
+        
+        .recommendation-title {
+            font-weight: 700;
+            font-size: 0.85rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #cbd5e1;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .recommendation-content {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: #e2e8f0;
+        }
+        
+        .recommendation-content strong {
+            color: #f1f5f9;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Sample Gallery */
+        .samples-section {
+            max-width: 1400px;
+            margin: 3rem auto;
+            padding: 2rem;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #f1f5f9;
+            margin-bottom: 0.5rem;
+        }
+        
+        .section-subtitle {
+            color: #64748b;
+            font-size: 1.1rem;
+        }
+        
+        .samples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .sample-card {
+            background: rgba(30, 41, 59, 0.6);
+            border: 2px solid rgba(139, 92, 246, 0.2);
+            border-radius: 15px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .sample-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(139, 92, 246, 0.3);
+        }
+        
+        .sample-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 0.75rem;
+        }
+        
+        .sample-label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 600;
+        }
+        
+        .sample-status {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+        
+        .status-fresh {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+        
+        .status-rotten {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+        
+        /* Loading Animation */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .loading.active {
+            display: block;
+        }
+        
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(139, 92, 246, 0.2);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Progress Bar */
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(139, 92, 246, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 1rem 0;
+            display: none;
+        }
+        
+        .progress-bar.active {
+            display: block;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            width: 0%;
+            transition: width 0.3s ease;
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .analysis-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .samples-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        /* Smooth Scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                ⚡ VIGILANCE.AI
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#analyze">Analyze</a></li>
+                <li><a href="#samples">Samples</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <h1>Advanced Food Quality Intelligence</h1>
+        <p>Leverage cutting-edge deep learning to instantly assess food freshness with military-grade accuracy. Reduce waste, ensure safety, protect health.</p>
+        
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number">96.2%</div>
+                <div class="stat-label">Accuracy</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">&lt;800ms</div>
+                <div class="stat-label">Analysis Time</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">11</div>
+                <div class="stat-label">Food Categories</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Analysis Section -->
+    <section class="analysis-section" id="analyze">
+        <!-- Upload Card -->
+        <div class="upload-card">
+            <div class="card-header">
+                <div class="card-icon">📸</div>
+                <div class="card-title">Upload & Analyze</div>
+            </div>
+            
+            <div class="upload-zone" id="uploadZone">
+                <div class="upload-icon">📤</div>
+                <div class="upload-text">Click to upload or drag & drop</div>
+                <div class="upload-hint">Supports JPG, PNG (Max 10MB)</div>
+                <input type="file" id="fileInput" accept="image/*" capture="environment">
+            </div>
+            
+            <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                <button class="camera-btn" id="cameraBtn">📷 Use Camera</button>
+                <button class="camera-btn" id="closeCameraBtn" style="display: none;">❌ Close Camera</button>
+            </div>
+            
+            <div class="camera-container" id="cameraContainer">
+                <video id="cameraVideo" autoplay playsinline></video>
+                <button class="capture-btn" id="captureBtn">📸 Capture</button>
+                <canvas id="cameraCanvas" style="display: none;"></canvas>
+            </div>
+            
+            <div class="preview-container" id="previewContainer">
+                <img id="previewImage" class="preview-image" alt="Preview">
+                <button class="analyze-btn" id="analyzeBtn">🔍 Analyze Quality</button>
+            </div>
+            
+            <div class="progress-bar" id="progressBar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <!-- Results Card -->
+        <div class="results-card">
+            <div class="results-placeholder" id="resultsPlaceholder">
+                <div class="results-placeholder-icon">🎯</div>
+                <h3>Results Will Appear Here</h3>
+                <p>Upload an image or select a sample to begin analysis</p>
+            </div>
+            
+            <div class="results-content" id="resultsContent">
+                <div class="results-header">
+                    <div class="status-badge" id="statusBadge">🟢 OPTIMAL</div>
+                    <div class="quality-classification" id="qualityClass">🏆 PREMIUM GRADE</div>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-label">Quality Index</div>
+                        <div class="metric-value" id="qualityScore">--</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">AI Confidence</div>
+                        <div class="metric-value" id="confidenceScore">--</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Safety Grade</div>
+                        <div class="metric-value" id="safetyGrade">--</div>
+                    </div>
+                </div>
+                
+                <div class="recommendation-box" id="recommendationBox">
+                    <div class="recommendation-title">
+                        <span>💼</span>
+                        <span>Recommendation</span>
+                    </div>
+                    <div class="recommendation-content" id="recommendationText">--</div>
+                </div>
+                
+                <div class="recommendation-box" style="border-left-color: #3b82f6;">
+                    <div class="recommendation-title">
+                        <span>📦</span>
+                        <span>Storage Protocol</span>
+                    </div>
+                    <div class="recommendation-content" id="storageText">--</div>
+                </div>
+            </div>
+            
+            <div class="loading" id="loadingIndicator">
+                <div class="spinner"></div>
+                <p>Analyzing image with neural networks...</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Samples Section -->
+    <section class="samples-section" id="samples">
+        <div class="section-header">
+            <h2 class="section-title">🧪 Test Reference Samples</h2>
+            <p class="section-subtitle">Click any sample to instantly analyze with Vigilance.AI</p>
+        </div>
+        
+        <div class="samples-grid" id="samplesGrid">
+            <!-- Sample cards will be generated here -->
+        </div>
+    </section>
+
+    <script>
+        // Simulated sample data
+        const sampleData = [
+            { name: 'Apple', status: 'fresh', emoji: '🍎' },
+            { name: 'Apple', status: 'rotten', emoji: '🍎' },
+            { name: 'Banana', status: 'fresh', emoji: '🍌' },
+            { name: 'Banana', status: 'rotten', emoji: '🍌' },
+            { name: 'Orange', status: 'fresh', emoji: '🍊' },
+            { name: 'Orange', status: 'rotten', emoji: '🍊' },
+            { name: 'Tomato', status: 'fresh', emoji: '🍅' },
+            { name: 'Tomato', status: 'rotten', emoji: '🍅' },
+            { name: 'Potato', status: 'fresh', emoji: '🥔' },
+            { name: 'Potato', status: 'rotten', emoji: '🥔' },
+            { name: 'Cucumber', status: 'fresh', emoji: '🥒' },
+            { name: 'Cucumber', status: 'rotten', emoji: '🥒' }
+        ];
+
+        // Generate sample cards
+        const samplesGrid = document.getElementById('samplesGrid');
+        sampleData.forEach((sample, index) => {
+            const card = document.createElement('div');
+            card.className = 'sample-card';
+            card.innerHTML = `
+                <div style="width: 100%; height: 150px; background: linear-gradient(135deg, ${sample.status === 'fresh' ? '#10b981' : '#ef4444'}20, ${sample.status === 'fresh' ? '#10b981' : '#ef4444'}10); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 4rem; margin-bottom: 0.75rem;">
+                    ${sample.emoji}
+                </div>
+                <div class="sample-label">
+                    <span>${sample.name}</span>
+                    <span class="sample-status status-${sample.status}">
+                        ${sample.status === 'fresh' ? '🟢 Fresh' : '🔴 Rotten'}
+                    </span>
+                </div>
+            `;
+            card.addEventListener('click', () => analyzeSample(sample));
+            samplesGrid.appendChild(card);
+        });
+
+        // File upload handling
+        const uploadZone = document.getElementById('uploadZone');
+        const fileInput = document.getElementById('fileInput');
+        const previewContainer = document.getElementById('previewContainer');
+        const previewImage = document.getElementById('previewImage');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        
+        // Camera elements
+        const cameraBtn = document.getElementById('cameraBtn');
+        const closeCameraBtn = document.getElementById('closeCameraBtn');
+        const cameraContainer = document.getElementById('cameraContainer');
+        const cameraVideo = document.getElementById('cameraVideo');
+        const captureBtn = document.getElementById('captureBtn');
+        const cameraCanvas = document.getElementById('cameraCanvas');
+        let stream = null;
+
+        uploadZone.addEventListener('click', () => fileInput.click());
+
+        uploadZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadZone.classList.add('active');
+        });
+
+        uploadZone.addEventListener('dragleave', () => {
+            uploadZone.classList.remove('active');
+        });
+
+        uploadZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadZone.classList.remove('active');
+            const file = e.dataTransfer.files[0];
+            handleFile(file);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            handleFile(file);
+        });
+
+        function handleFile(file) {
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    previewImage.src = e.target.result;
+                    previewContainer.classList.add('active');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        analyzeBtn.addEventListener('click', () => analyzeImage());
+        
+        // Camera functionality
+        cameraBtn.addEventListener('click', async () => {
+            try {
+                // First try with back camera
+                const constraints = {
+                    video: {
+                        facingMode: { ideal: 'environment' },
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    }
+                };
+                
+                stream = await navigator.mediaDevices.getUserMedia(constraints);
+                cameraVideo.srcObject = stream;
+                
+                // Wait for video to be ready
+                cameraVideo.onloadedmetadata = () => {
+                    cameraVideo.play();
+                    cameraContainer.classList.add('active');
+                    cameraBtn.style.display = 'none';
+                    closeCameraBtn.style.display = 'block';
+                    previewContainer.classList.remove('active');
+                };
+            } catch (err) {
+                console.error('Camera error:', err);
+                // Try with any available camera as fallback
+                try {
+                    stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                    cameraVideo.srcObject = stream;
+                    cameraVideo.onloadedmetadata = () => {
+                        cameraVideo.play();
+                        cameraContainer.classList.add('active');
+                        cameraBtn.style.display = 'none';
+                        closeCameraBtn.style.display = 'block';
+                        previewContainer.classList.remove('active');
+                    };
+                } catch (fallbackErr) {
+                    alert('Unable to access camera. Please check permissions and try again.\n\nError: ' + fallbackErr.message);
+                    console.error('Fallback camera error:', fallbackErr);
+                }
+            }
+        });
+        
+        closeCameraBtn.addEventListener('click', () => {
+            stopCamera();
+        });
+        
+        captureBtn.addEventListener('click', () => {
+            // Make sure video is playing
+            if (cameraVideo.readyState === cameraVideo.HAVE_ENOUGH_DATA) {
+                // Set canvas dimensions to match video
+                cameraCanvas.width = cameraVideo.videoWidth;
+                cameraCanvas.height = cameraVideo.videoHeight;
+                
+                // Draw the current video frame to canvas
+                const context = cameraCanvas.getContext('2d');
+                context.drawImage(cameraVideo, 0, 0, cameraCanvas.width, cameraCanvas.height);
+                
+                // Convert canvas to image and display in preview
+                const imageDataURL = cameraCanvas.toDataURL('image/jpeg', 0.95);
+                previewImage.src = imageDataURL;
+                previewContainer.classList.add('active');
+                
+                // Stop camera and hide video
+                stopCamera();
+            } else {
+                alert('Camera is still loading. Please wait a moment and try again.');
+            }
+        });
+        
+        function stopCamera() {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                stream = null;
+            }
+            cameraContainer.classList.remove('active');
+            cameraBtn.style.display = 'block';
+            closeCameraBtn.style.display = 'none';
+        }
+
+        function analyzeSample(sample) {
+            // Create a placeholder image for the sample
+            const canvas = document.createElement('canvas');
+            canvas.width = 400;
+            canvas.height = 400;
+            const ctx = canvas.getContext('2d');
+            
+            // Draw gradient background
+            const gradient = ctx.createLinearGradient(0, 0, 400, 400);
+            gradient.addColorStop(0, sample.status === 'fresh' ? '#10b981' : '#ef4444');
+            gradient.addColorStop(1, sample.status === 'fresh' ? '#059669' : '#dc2626');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, 400, 400);
+            
+            // Draw emoji
+            ctx.font = '200px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(sample.emoji, 200, 200);
+            
+            // Set as preview and analyze
+            previewImage.src = canvas.toDataURL('image/jpeg', 0.95);
+            previewContainer.classList.add('active');
+            
+            // Trigger real analysis
+            analyzeImage();
+        }
+
+        function analyzeImage() {
+            // Hide results, show loading
+            document.getElementById('resultsPlaceholder').style.display = 'none';
+            document.getElementById('resultsContent').classList.remove('active');
+            document.getElementById('loadingIndicator').classList.add('active');
+            document.getElementById('progressBar').classList.add('active');
+            
+            // Get the image data
+            const imageData = previewImage.src;
+            
+            // Simulate progress
+            let progress = 0;
+            const progressFill = document.getElementById('progressFill');
+            const progressInterval = setInterval(() => {
+                progress += 10;
+                progressFill.style.width = progress + '%';
+                if (progress >= 90) {
+                    clearInterval(progressInterval);
+                }
+            }, 200);
+            
+            // Convert base64 to blob
+            fetch(imageData)
+                .then(res => res.blob())
+                .then(blob => {
+                    const formData = new FormData();
+                    formData.append('file', blob, 'image.jpg');
+                    
+                    // Call your backend API
+                    return fetch('https://yasz24-vigilance-backend.hf.space/api/predict', {
+                        method: 'POST',
+                        body: formData
+                    });
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Complete progress
+                    progressFill.style.width = '100%';
+                    
+                    setTimeout(() => {
+                        // Process API response
+                        const prediction = data.prediction.toLowerCase();
+                        const confidence = data.confidence * 100;
+                        
+                        // Determine if optimal or compromised
+                        const isOptimal = prediction.includes('fresh');
+                        const quality = isOptimal ? 
+                            Math.floor(confidence * 0.8 + 20) : 
+                            Math.floor((100 - confidence) * 0.6);
+                        
+                        showResults(isOptimal ? 'optimal' : 'compromised', quality, confidence, prediction);
+                    }, 500);
+                })
+                .catch(error => {
+                    console.error('API Error:', error);
+                    document.getElementById('loadingIndicator').classList.remove('active');
+                    document.getElementById('progressBar').classList.remove('active');
+                    alert('Analysis failed. Please check your connection and try again.\n\nError: ' + error.message);
+                });
+        }
+
+        function showResults(status, qualityScore, confidence, prediction) {
+            // Hide loading
+            document.getElementById('loadingIndicator').classList.remove('active');
+            document.getElementById('progressBar').classList.remove('active');
+            document.getElementById('progressFill').style.width = '0%';
+            
+            // Show results
+            const resultsContent = document.getElementById('resultsContent');
+            resultsContent.classList.add('active');
+            
+            // Update status badge
+            const statusBadge = document.getElementById('statusBadge');
+            if (status === 'optimal') {
+                statusBadge.className = 'status-badge status-optimal';
+                statusBadge.textContent = '🟢 STATUS: OPTIMAL';
+            } else {
+                statusBadge.className = 'status-badge status-compromised';
+                statusBadge.textContent = '🔴 STATUS: COMPROMISED';
+            }
+            
+            // Update quality classification
+            const classifications = [
+                { min: 95, label: '💎 ULTRA PREMIUM' },
+                { min: 85, label: '🏆 PREMIUM GRADE' },
+                { min: 75, label: '⭐ SUPERIOR' },
+                { min: 65, label: '✓ ACCEPTABLE' },
+                { min: 45, label: '⚠ MARGINAL' },
+                { min: 0, label: '✕ REJECTED' }
+            ];
+            
+            const classification = classifications.find(c => qualityScore >= c.min);
+            document.getElementById('qualityClass').textContent = classification.label;
+            
+            // Update metrics
+            document.getElementById('qualityScore').textContent = qualityScore + '/100';
+            document.getElementById('confidenceScore').textContent = confidence.toFixed(1) + '%';
+            
+            let grade = 'F';
+            if (qualityScore >= 95) grade = 'A+';
+            else if (qualityScore >= 85) grade = 'A';
+            else if (qualityScore >= 75) grade = 'B+';
+            else if (qualityScore >= 65) grade = 'B';
+            else if (qualityScore >= 45) grade = 'C';
+            
+            document.getElementById('safetyGrade').textContent = grade;
+            
+            // Update recommendation
+            const recommendationBox = document.getElementById('recommendationBox');
+            const recommendationText = document.getElementById('recommendationText');
+            
+            if (qualityScore >= 85) {
+                recommendationBox.style.borderLeftColor = '#10b981';
+                recommendationText.innerHTML = '<strong>Approved for Procurement</strong>Product meets premium quality standards. Safe for purchase with standard storage protocols.';
+            } else if (qualityScore >= 65) {
+                recommendationBox.style.borderLeftColor = '#3b82f6';
+                recommendationText.innerHTML = '<strong>Acceptable Quality</strong>Product is safe for purchase. Consume within 2-3 days for best quality.';
+            } else if (qualityScore >= 45 && qualityScore <= 60) {
+                recommendationBox.style.borderLeftColor = '#f59e0b';
+                recommendationText.innerHTML = '<strong>Human Verification Required</strong>Analysis is inconclusive (Score: ' + qualityScore + '/100). Please inspect manually or recapture with better lighting. Seek expert opinion before purchase.';
+            } else if (qualityScore >= 45) {
+                recommendationBox.style.borderLeftColor = '#f97316';
+                recommendationText.innerHTML = '<strong>Quality Concern Detected</strong>Shows signs of degradation. Not recommended unless for immediate cooking.';
+            } else {
+                recommendationBox.style.borderLeftColor = '#ef4444';
+                recommendationText.innerHTML = '<strong>Quality Failure</strong>Product has failed assessment. Do not purchase or consume. Dispose safely.';
+            }
+            
+            // Update storage protocol
+            const storageText = document.getElementById('storageText');
+            if (qualityScore >= 85) {
+                storageText.innerHTML = 'Ambient storage acceptable. Standard shelf life expected. Monitor periodically for changes.';
+            } else if (qualityScore >= 65) {
+                storageText.innerHTML = 'Refrigeration required immediately. Consume within 48-72 hours. Daily inspection recommended.';
+            } else if (qualityScore >= 45) {
+                storageText.innerHTML = 'Cook or process immediately if owned. Not suitable for raw consumption. High spoilage risk.';
+            } else {
+                storageText.innerHTML = 'Immediate disposal required. Do not consume under any circumstances. Potential health hazard.';
+            }
+            
+            // Smooth scroll to results
+            resultsContent.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Add smooth parallax effect on hero
+        window.addEventListener('scroll', () => {
+            const hero = document.querySelector('.hero');
+            const scrolled = window.pageYOffset;
+            hero.style.transform = `translateY(${scrolled * 0.3}px)`;
+            hero.style.opacity = 1 - (scrolled / 600);
+        });
+
+        // Add interactive hover effects to cards
+        document.querySelectorAll('.sample-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px) scale(1.05)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Initialize with a welcome animation
+        window.addEventListener('load', () => {
+            document.querySelector('.hero').style.opacity = '0';
+            setTimeout(() => {
+                document.querySelector('.hero').style.transition = 'opacity 1s ease';
+                document.querySelector('.hero').style.opacity = '1';
+            }, 100);
+        });
+
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Press 'U' to upload
+            if (e.key === 'u' || e.key === 'U') {
+                fileInput.click();
+            }
+            // Press 'A' to analyze (if image is loaded)
+            if ((e.key === 'a' || e.key === 'A') && previewContainer.classList.contains('active')) {
+                analyzeImage();
+            }
+        });
+
+        // Add click animation effect
+        document.addEventListener('click', (e) => {
+            const ripple = document.createElement('div');
+            ripple.style.position = 'fixed';
+            ripple.style.width = '20px';
+            ripple.style.height = '20px';
+            ripple.style.borderRadius = '50%';
+            ripple.style.background = 'rgba(139, 92, 246, 0.5)';
+            ripple.style.left = e.clientX - 10 + 'px';
+            ripple.style.top = e.clientY - 10 + 'px';
+            ripple.style.pointerEvents = 'none';
+            ripple.style.animation = 'rippleEffect 0.6s ease-out';
+            document.body.appendChild(ripple);
+            
+            setTimeout(() => ripple.remove(), 600);
+        });
+
+        // Add ripple animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes rippleEffect {
+                0% {
+                    transform: scale(1);
+                    opacity: 1;
+                }
+                100% {
+                    transform: scale(20);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        console.log('%c⚡ VIGILANCE.AI ', 'background: linear-gradient(135deg, #8b5cf6, #3b82f6); color: white; font-size: 20px; font-weight: bold; padding: 10px 20px; border-radius: 5px;');
+        console.log('%cAdvanced Food Quality Intelligence Platform', 'color: #8b5cf6; font-size: 14px; font-weight: 600;');
+        console.log('%cKeyboard Shortcuts: Press U to upload | Press A to analyze', 'color: #64748b; font-size: 12px;');
+    </script>
+</body>
+</html>
