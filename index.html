@@ -997,33 +997,60 @@
             closeCameraBtn.style.display = 'none';
         }
 
-        function analyzeSample(sample) {
-            // Create a placeholder image for the sample
-            const canvas = document.createElement('canvas');
-            canvas.width = 400;
-            canvas.height = 400;
-            const ctx = canvas.getContext('2d');
-            
-            // Draw gradient background
-            const gradient = ctx.createLinearGradient(0, 0, 400, 400);
-            gradient.addColorStop(0, sample.status === 'fresh' ? '#10b981' : '#ef4444');
-            gradient.addColorStop(1, sample.status === 'fresh' ? '#059669' : '#dc2626');
-            ctx.fillStyle = gradient;
-            ctx.fillRect(0, 0, 400, 400);
-            
-            // Draw emoji
-            ctx.font = '200px Arial';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText(sample.emoji, 200, 200);
-            
-            // Set as preview and analyze
-            previewImage.src = canvas.toDataURL('image/jpeg', 0.95);
-            previewContainer.classList.add('active');
-            
-            // Trigger real analysis
-            analyzeImage();
-        }
+        async function analyzeImage() {
+  // Hide previous results and show loading
+  document.getElementById('resultsPlaceholder').style.display = 'none';
+  document.getElementById('resultsContent').classList.remove('active');
+  document.getElementById('loadingIndicator').classList.add('active');
+  document.getElementById('progressBar').classList.add('active');
+
+  try {
+    const imageData = document.getElementById('previewImage').src;
+
+    // Convert base64 image to Blob
+    const response = await fetch(imageData);
+    const blob = await response.blob();
+
+    // Prepare form data
+    const formData = new FormData();
+    formData.append('file', blob, 'image.jpg');
+
+    // Backend URL exactly as FastAPI expects (no trailing slash)
+    const backendUrl = 'https://yasz24-vigilance-backend.hf.space/api/predict';
+
+    // Send POST request with form data
+    const apiResponse = await fetch(backendUrl, {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!apiResponse.ok) {
+      throw new Error(`Server responded with status ${apiResponse.status}`);
+    }
+
+    const data = await apiResponse.json();
+
+    // Complete progress bar visually
+    document.getElementById('progressFill').style.width = '100%';
+
+    // Process the API response here, call your showResults function (or equivalent)
+    showResults(
+      data.status === 'optimal' ? 'optimal' : 'compromised',
+      data.quality_score,
+      data.confidence,
+      data.classification
+    );
+
+  } catch (error) {
+    console.error('API Error:', error);
+    alert('Analysis failed. Please check your connection and try again.\n' + error.message);
+  } finally {
+    // Hide loading indicators
+    document.getElementById('loadingIndicator').classList.remove('active');
+    document.getElementById('progressBar').classList.remove('active');
+    document.getElementById('progressFill').style.width = '0%';
+  }
+}
 
         function analyzeImage() {
             // Hide results, show loading
