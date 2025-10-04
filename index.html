@@ -1053,13 +1053,25 @@
                     const formData = new FormData();
                     formData.append('file', blob, 'image.jpg');
                     
-                    // Call your backend API
-                    return fetch('https://yasz24-vigilance-backend.hf.space/api/predict', {
+                    // Add timeout for long-running requests
+                    const timeout = new Promise((_, reject) => 
+                        setTimeout(() => reject(new Error('Request timeout - backend may be waking up')), 60000)
+                    );
+                    
+                    const fetchPromise = fetch('https://yasz24-vigilance-backend.hf.space/api/predict', {
                         method: 'POST',
                         body: formData
                     });
+                    
+                    // Race between timeout and actual request
+                    return Promise.race([fetchPromise, timeout]);
                 })
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Server error: ${response.status}`);
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     // Complete progress
                     progressFill.style.width = '100%';
