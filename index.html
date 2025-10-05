@@ -938,13 +938,14 @@
             
             <div class="upload-zone" id="uploadZone">
                 <div class="upload-icon">📤</div>
-                <div class="upload-text">Click to upload or drag & drop</div>
+                <div class="upload-text">Upload from Gallery</div>
                 <div class="upload-hint">Supports JPG, PNG (Max 10MB)</div>
-                <input type="file" id="fileInput" accept="image/*" capture="environment">
+                <input type="file" id="fileInput" accept="image/*">
             </div>
             
             <div class="camera-controls">
-                <button class="camera-btn" id="cameraBtn">📷 Use Camera</button>
+                <button class="camera-btn" id="takePhotoBtn">📷 Take Photo</button>
+                <button class="camera-btn" id="cameraBtn" style="display: none;">🎥 Use Live Camera</button>
                 <button class="camera-btn" id="closeCameraBtn" style="display: none;">❌ Close Camera</button>
             </div>
             
@@ -1131,6 +1132,7 @@
         const previewContainer = document.getElementById('previewContainer');
         const previewImage = document.getElementById('previewImage');
         const analyzeBtn = document.getElementById('analyzeBtn');
+        const takePhotoBtn = document.getElementById('takePhotoBtn');
         const cameraBtn = document.getElementById('cameraBtn');
         const closeCameraBtn = document.getElementById('closeCameraBtn');
         const cameraContainer = document.getElementById('cameraContainer');
@@ -1139,7 +1141,7 @@
         const cameraCanvas = document.getElementById('cameraCanvas');
         let stream = null;
 
-        // Upload zone handlers
+        // Upload zone handlers - Gallery upload
         uploadZone.addEventListener('click', () => fileInput.click());
         
         uploadZone.addEventListener('dragover', (e) => {
@@ -1159,6 +1161,18 @@
         
         fileInput.addEventListener('change', (e) => {
             handleFile(e.target.files[0]);
+        });
+
+        // Take Photo button - Opens camera directly on mobile
+        takePhotoBtn.addEventListener('click', () => {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.capture = 'environment'; // This triggers camera on mobile
+            input.onchange = (e) => {
+                handleFile(e.target.files[0]);
+            };
+            input.click();
         });
 
         function handleFile(file) {
@@ -1183,7 +1197,7 @@
             reader.readAsDataURL(file);
         }
 
-        // Camera handlers
+        // Live Camera handlers (optional feature - currently hidden)
         cameraBtn.addEventListener('click', async () => {
             try {
                 stream = await navigator.mediaDevices.getUserMedia({
@@ -1240,7 +1254,7 @@
             closeCameraBtn.style.display = 'none';
         }
 
-        // Analysis function - UPDATED VERSION
+        // Analysis function - UPDATED VERSION WITH FRUIT/VEGGIE VALIDATION
         analyzeBtn.addEventListener('click', analyzeImage);
 
         async function analyzeImage() {
@@ -1268,7 +1282,7 @@
             try {
                 const blob = await fetch(previewImage.src).then(r => r.blob());
                 const formData = new FormData();
-                formData.append('file', blob, 'image.jpg');  // Changed from 'data' to 'file'
+                formData.append('file', blob, 'image.jpg');
                 
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 60000);
@@ -1288,8 +1302,30 @@
                 const result = await response.json();
                 console.log('API Response:', result);
                 
+                // FRUIT/VEGGIE VALIDATION - Reject non-food items
                 if (result.error || result.status === 'error') {
                     throw new Error(result.error || 'Analysis failed');
+                }
+                
+                // Check if it's actually a fruit or vegetable
+                // Add your fruit/veggie categories here based on your model
+                const validCategories = [
+                    'apple', 'banana', 'orange', 'potato', 'tomato', 'carrot',
+                    'grape', 'strawberry', 'watermelon', 'mango', 'pineapple',
+                    'cucumber', 'pepper', 'bell pepper', 'onion', 'lettuce', 'cabbage', 
+                    'broccoli', 'cauliflower', 'spinach', 'kale', 'corn', 'peas', 
+                    'beans', 'lemon', 'lime', 'pear', 'peach', 'plum', 'avocado',
+                    'eggplant', 'zucchini', 'squash', 'pumpkin', 'radish', 'beet',
+                    'celery', 'asparagus', 'mushroom', 'garlic', 'ginger', 'chili',
+                    'fresh', 'rotten', 'fruit', 'vegetable', 'veggie', 'produce'
+                    // Add more categories as needed based on your model's output
+                ];
+                
+                const classification = (result.classification || '').toLowerCase();
+                const isFruitOrVeggie = validCategories.some(item => classification.includes(item));
+                
+                if (!isFruitOrVeggie) {
+                    throw new Error('⚠️ Please upload only fruits or vegetables. This item is not recognized as produce.');
                 }
                 
                 clearInterval(progressInterval);
@@ -1370,49 +1406,6 @@
                 }
             }, 16);
         }
-        
-        // Keyboard shortcuts
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'u' || e.key === 'U') {
-                fileInput.click();
-            }
-            if ((e.key === 'a' || e.key === 'A') && previewContainer.classList.contains('active')) {
-                analyzeImage();
-            }
-        });
-        
-        // Click ripple effect
-        document.addEventListener('click', (e) => {
-            const ripple = document.createElement('div');
-            ripple.style.position = 'fixed';
-            ripple.style.width = '10px';
-            ripple.style.height = '10px';
-            ripple.style.borderRadius = '50%';
-            ripple.style.background = 'rgba(139, 92, 246, 0.4)';
-            ripple.style.left = e.clientX - 5 + 'px';
-            ripple.style.top = e.clientY - 5 + 'px';
-            ripple.style.pointerEvents = 'none';
-            ripple.style.animation = 'rippleEffect 0.6s ease-out';
-            ripple.style.zIndex = '9999';
-            document.body.appendChild(ripple);
-            
-            setTimeout(() => ripple.remove(), 600);
-        });
-        
-        const rippleStyle = document.createElement('style');
-        rippleStyle.textContent = `
-            @keyframes rippleEffect {
-                0% {
-                    transform: scale(1);
-                    opacity: 1;
-                }
-                100% {
-                    transform: scale(20);
-                    opacity: 0;
-                }
-            }
-        `;
-        document.head.appendChild(rippleStyle);
         
         // Sample card click handlers
         const sampleCards = document.querySelectorAll('.sample-card');
@@ -1516,6 +1509,49 @@
                 }, 1000);
             });
         });
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'u' || e.key === 'U') {
+                fileInput.click();
+            }
+            if ((e.key === 'a' || e.key === 'A') && previewContainer.classList.contains('active')) {
+                analyzeImage();
+            }
+        });
+        
+        // Click ripple effect
+        document.addEventListener('click', (e) => {
+            const ripple = document.createElement('div');
+            ripple.style.position = 'fixed';
+            ripple.style.width = '10px';
+            ripple.style.height = '10px';
+            ripple.style.borderRadius = '50%';
+            ripple.style.background = 'rgba(139, 92, 246, 0.4)';
+            ripple.style.left = e.clientX - 5 + 'px';
+            ripple.style.top = e.clientY - 5 + 'px';
+            ripple.style.pointerEvents = 'none';
+            ripple.style.animation = 'rippleEffect 0.6s ease-out';
+            ripple.style.zIndex = '9999';
+            document.body.appendChild(ripple);
+            
+            setTimeout(() => ripple.remove(), 600);
+        });
+        
+        const rippleStyle = document.createElement('style');
+        rippleStyle.textContent = `
+            @keyframes rippleEffect {
+                0% {
+                    transform: scale(1);
+                    opacity: 1;
+                }
+                100% {
+                    transform: scale(20);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(rippleStyle);
         
         console.log('%c⚡ VIGILANCE.AI', 'background: linear-gradient(135deg, #8b5cf6, #3b82f6); color: white; font-size: 20px; font-weight: bold; padding: 10px 20px; border-radius: 5px;');
         console.log('%cKeyboard Shortcuts: U = Upload | A = Analyze', 'color: #8b5cf6; font-size: 12px;');
