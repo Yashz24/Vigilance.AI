@@ -29,7 +29,6 @@
             overflow-x: hidden;
         }
         
-        /* Animated Background Particles */
         .particles {
             position: fixed;
             top: 0;
@@ -747,6 +746,91 @@
             100% { background-position: 0% 50%; }
         }
         
+        .samples-section {
+            max-width: 1400px;
+            margin: 3rem auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #f1f5f9;
+            margin-bottom: 0.5rem;
+        }
+        
+        .section-subtitle {
+            color: #64748b;
+            font-size: 1.1rem;
+        }
+        
+        .samples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .sample-card {
+            background: rgba(30, 41, 59, 0.6);
+            border: 2px solid rgba(139, 92, 246, 0.2);
+            border-radius: 15px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .sample-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(139, 92, 246, 0.3);
+        }
+        
+        .sample-emoji {
+            width: 100%;
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            border-radius: 10px;
+            margin-bottom: 0.75rem;
+        }
+        
+        .sample-label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 600;
+        }
+        
+        .sample-status {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+        
+        .status-fresh {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+        
+        .status-rotten {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+        
         .toast {
             position: fixed;
             bottom: 2rem;
@@ -801,6 +885,9 @@
             .camera-controls {
                 flex-direction: column;
             }
+            .samples-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
         
         html {
@@ -817,6 +904,7 @@
             <ul class="nav-links">
                 <li><a href="#home">Home</a></li>
                 <li><a href="#analyze">Analyze</a></li>
+                <li><a href="#samples">Samples</a></li>
             </ul>
         </div>
     </nav>
@@ -918,6 +1006,58 @@
                 <div class="spinner"></div>
                 <p class="loading-text">Analyzing with neural networks...</p>
                 <p class="loading-hint" id="loadingHint">Backend may be waking up. This can take up to 60 seconds on first use.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="samples-section" id="samples">
+        <div class="section-header">
+            <h2 class="section-title">Sample Foods</h2>
+            <p class="section-subtitle">Click to see example analysis results</p>
+        </div>
+        
+        <div class="samples-grid">
+            <div class="sample-card">
+                <div class="sample-emoji">🍎</div>
+                <div class="sample-label">
+                    <span>Apple</span>
+                    <span class="sample-status status-fresh">Fresh</span>
+                </div>
+            </div>
+            <div class="sample-card">
+                <div class="sample-emoji">🍌</div>
+                <div class="sample-label">
+                    <span>Banana</span>
+                    <span class="sample-status status-rotten">Rotten</span>
+                </div>
+            </div>
+            <div class="sample-card">
+                <div class="sample-emoji">🍊</div>
+                <div class="sample-label">
+                    <span>Orange</span>
+                    <span class="sample-status status-fresh">Fresh</span>
+                </div>
+            </div>
+            <div class="sample-card">
+                <div class="sample-emoji">🥔</div>
+                <div class="sample-label">
+                    <span>Potato</span>
+                    <span class="sample-status status-fresh">Fresh</span>
+                </div>
+            </div>
+            <div class="sample-card">
+                <div class="sample-emoji">🍅</div>
+                <div class="sample-label">
+                    <span>Tomato</span>
+                    <span class="sample-status status-rotten">Rotten</span>
+                </div>
+            </div>
+            <div class="sample-card">
+                <div class="sample-emoji">🥕</div>
+                <div class="sample-label">
+                    <span>Carrot</span>
+                    <span class="sample-status status-fresh">Fresh</span>
+                </div>
             </div>
         </div>
     </section>
@@ -1100,7 +1240,7 @@
             closeCameraBtn.style.display = 'none';
         }
 
-        // Analysis function
+        // Analysis function - UPDATED VERSION
         analyzeBtn.addEventListener('click', analyzeImage);
 
         async function analyzeImage() {
@@ -1128,7 +1268,7 @@
             try {
                 const blob = await fetch(previewImage.src).then(r => r.blob());
                 const formData = new FormData();
-                formData.append('data', blob, 'image.jpg');
+                formData.append('file', blob, 'image.jpg');  // Changed from 'data' to 'file'
                 
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 60000);
@@ -1174,9 +1314,9 @@
                 
                 let errorMessage = 'Analysis failed: ';
                 if (error.name === 'AbortError') {
-                    errorMessage += 'Request timeout (>60s). Backend may be sleeping. Try again in a moment!';
+                    errorMessage += 'Request timeout. Backend may be sleeping. Try again!';
                 } else if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
-                    errorMessage += 'Cannot connect to server. Check if backend is running and CORS is enabled.';
+                    errorMessage += 'Cannot connect to server. Check backend status.';
                 } else {
                     errorMessage += error.message;
                 }
@@ -1273,6 +1413,109 @@
             }
         `;
         document.head.appendChild(rippleStyle);
+        
+        // Sample card click handlers
+        const sampleCards = document.querySelectorAll('.sample-card');
+        const sampleData = {
+            0: { // Fresh Apple
+                status: 'optimal',
+                classification: 'Fresh Apple - Grade A',
+                quality_score: 94.5,
+                confidence: 98.2,
+                safety_grade: 'A+',
+                recommendation: {
+                    title: 'Safe to Consume',
+                    message: 'Excellent quality detected. This apple shows optimal freshness indicators with vibrant color and firm texture.',
+                    color: '#10b981'
+                },
+                storage_protocol: 'Store in refrigerator crisper drawer at 32-40°F. Can last 4-6 weeks under proper conditions.'
+            },
+            1: { // Rotten Banana
+                status: 'compromised',
+                classification: 'Rotten Banana - Unsafe',
+                quality_score: 23.1,
+                confidence: 95.7,
+                safety_grade: 'F',
+                recommendation: {
+                    title: 'Do Not Consume',
+                    message: 'Significant degradation detected. Advanced spoilage indicators present. Dispose immediately to prevent contamination.',
+                    color: '#ef4444'
+                },
+                storage_protocol: 'Item has exceeded safe storage duration. Discard and sanitize storage area.'
+            },
+            2: { // Fresh Orange
+                status: 'optimal',
+                classification: 'Fresh Orange - Grade A',
+                quality_score: 91.8,
+                confidence: 96.4,
+                safety_grade: 'A',
+                recommendation: {
+                    title: 'Safe to Consume',
+                    message: 'High quality citrus fruit with optimal ripeness. Excellent vitamin C content expected.',
+                    color: '#10b981'
+                },
+                storage_protocol: 'Store at room temperature for up to 1 week, or refrigerate for 2-3 weeks.'
+            },
+            3: { // Fresh Potato
+                status: 'optimal',
+                classification: 'Fresh Potato - Grade A',
+                quality_score: 89.3,
+                confidence: 93.8,
+                safety_grade: 'A',
+                recommendation: {
+                    title: 'Safe to Consume',
+                    message: 'Firm texture with no sprouting detected. Good for cooking and consumption.',
+                    color: '#10b981'
+                },
+                storage_protocol: 'Store in cool, dark, dry place at 45-50°F. Avoid refrigeration. Lasts 2-3 months.'
+            },
+            4: { // Rotten Tomato
+                status: 'compromised',
+                classification: 'Rotten Tomato - Unsafe',
+                quality_score: 18.7,
+                confidence: 97.1,
+                safety_grade: 'F',
+                recommendation: {
+                    title: 'Do Not Consume',
+                    message: 'Severe degradation with visible mold indicators. High risk of bacterial contamination.',
+                    color: '#ef4444'
+                },
+                storage_protocol: 'Item is beyond salvageable state. Dispose in sealed container immediately.'
+            },
+            5: { // Fresh Carrot
+                status: 'optimal',
+                classification: 'Fresh Carrot - Grade A',
+                quality_score: 92.6,
+                confidence: 94.5,
+                safety_grade: 'A',
+                recommendation: {
+                    title: 'Safe to Consume',
+                    message: 'Crisp texture with vibrant color. High nutritional value maintained.',
+                    color: '#10b981'
+                },
+                storage_protocol: 'Store in refrigerator crisper drawer, preferably in plastic bag. Lasts 3-4 weeks.'
+            }
+        };
+        
+        sampleCards.forEach((card, index) => {
+            card.addEventListener('click', () => {
+                showToast('Loading sample analysis...', 'success');
+                
+                // Simulate loading
+                document.getElementById('resultsPlaceholder').style.display = 'none';
+                document.getElementById('resultsContent').classList.remove('active');
+                document.getElementById('loadingIndicator').classList.add('active');
+                
+                setTimeout(() => {
+                    showResults(sampleData[index]);
+                    document.getElementById('loadingIndicator').classList.remove('active');
+                    showToast('Sample analysis loaded!', 'success');
+                    
+                    // Scroll to results
+                    document.getElementById('analyze').scrollIntoView({ behavior: 'smooth' });
+                }, 1000);
+            });
+        });
         
         console.log('%c⚡ VIGILANCE.AI', 'background: linear-gradient(135deg, #8b5cf6, #3b82f6); color: white; font-size: 20px; font-weight: bold; padding: 10px 20px; border-radius: 5px;');
         console.log('%cKeyboard Shortcuts: U = Upload | A = Analyze', 'color: #8b5cf6; font-size: 12px;');
