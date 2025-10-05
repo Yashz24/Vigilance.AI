@@ -1308,20 +1308,19 @@
                     throw new Error(result.error || 'Analysis failed');
                 }
                 
-                // TEMPORARY: Validation disabled for debugging
-                // Check browser console to see what classification your backend returns
-                // Then add those exact words to validCategories array below
-                
-                /* UNCOMMENT THIS AFTER CHECKING CONSOLE LOGS
+                // Check if it's actually a fruit or vegetable
                 const validCategories = [
                     'apple', 'banana', 'orange', 'potato', 'tomato', 'carrot',
                     'grape', 'strawberry', 'watermelon', 'mango', 'pineapple',
-                    'cucumber', 'pepper', 'bell pepper', 'onion', 'lettuce', 'cabbage', 
-                    'broccoli', 'cauliflower', 'spinach', 'kale', 'corn', 'peas', 
-                    'beans', 'lemon', 'lime', 'pear', 'peach', 'plum', 'avocado',
-                    'eggplant', 'zucchini', 'squash', 'pumpkin', 'radish', 'beet',
-                    'celery', 'asparagus', 'mushroom', 'garlic', 'ginger', 'chili',
-                    'fresh', 'rotten', 'fruit', 'vegetable', 'veggie', 'produce'
+                    'cucumber', 'pepper', 'bell pepper', 'capsicum', 'onion', 
+                    'lettuce', 'cabbage', 'broccoli', 'cauliflower', 'spinach', 
+                    'kale', 'corn', 'peas', 'beans', 'lemon', 'lime', 'pear', 
+                    'peach', 'plum', 'avocado', 'eggplant', 'zucchini', 'squash', 
+                    'pumpkin', 'radish', 'beet', 'celery', 'asparagus', 'mushroom', 
+                    'garlic', 'ginger', 'chili', 'okra', 'bitter gourd',
+                    'fresh', 'rotten', 'fruit', 'vegetable', 'veggie', 'produce',
+                    'premium', 'ultra', 'superior', 'acceptable', 'marginal', 'rejected',
+                    'grade', 'degrading'
                 ];
                 
                 const classification = (result.classification || '').toLowerCase();
@@ -1330,7 +1329,6 @@
                 if (!isFruitOrVeggie) {
                     throw new Error('⚠️ Please upload only fruits or vegetables. This item is not recognized as produce.');
                 }
-                */
                 
                 clearInterval(progressInterval);
                 progressFill.style.width = '100%';
