@@ -1301,14 +1301,18 @@
                 
                 const result = await response.json();
                 console.log('API Response:', result);
+                console.log('Classification received:', result.classification);
                 
                 // FRUIT/VEGGIE VALIDATION - Reject non-food items
                 if (result.error || result.status === 'error') {
                     throw new Error(result.error || 'Analysis failed');
                 }
                 
-                // Check if it's actually a fruit or vegetable
-                // Add your fruit/veggie categories here based on your model
+                // TEMPORARY: Validation disabled for debugging
+                // Check browser console to see what classification your backend returns
+                // Then add those exact words to validCategories array below
+                
+                /* UNCOMMENT THIS AFTER CHECKING CONSOLE LOGS
                 const validCategories = [
                     'apple', 'banana', 'orange', 'potato', 'tomato', 'carrot',
                     'grape', 'strawberry', 'watermelon', 'mango', 'pineapple',
@@ -1318,7 +1322,6 @@
                     'eggplant', 'zucchini', 'squash', 'pumpkin', 'radish', 'beet',
                     'celery', 'asparagus', 'mushroom', 'garlic', 'ginger', 'chili',
                     'fresh', 'rotten', 'fruit', 'vegetable', 'veggie', 'produce'
-                    // Add more categories as needed based on your model's output
                 ];
                 
                 const classification = (result.classification || '').toLowerCase();
@@ -1327,6 +1330,7 @@
                 if (!isFruitOrVeggie) {
                     throw new Error('⚠️ Please upload only fruits or vegetables. This item is not recognized as produce.');
                 }
+                */
                 
                 clearInterval(progressInterval);
                 progressFill.style.width = '100%';
