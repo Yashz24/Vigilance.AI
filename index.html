@@ -381,56 +381,6 @@
             transform: translateY(0);
         }
         
-        .camera-container {
-            display: none;
-            margin-top: 1.5rem;
-            border-radius: 12px;
-            overflow: hidden;
-            position: relative;
-            animation: slideIn 0.3s ease;
-        }
-        
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .camera-container.active {
-            display: block;
-        }
-        
-        #cameraVideo {
-            width: 100%;
-            border-radius: 12px;
-            display: block;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-        }
-        
-        .capture-btn {
-            position: absolute;
-            bottom: 1.5rem;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 1rem 2rem;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            border: none;
-            border-radius: 50px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 5px 25px rgba(139, 92, 246, 0.5);
-        }
-        
-        .capture-btn:hover {
-            transform: translateX(-50%) scale(1.1);
-            box-shadow: 0 8px 35px rgba(139, 92, 246, 0.7);
-        }
-        
-        .capture-btn:active {
-            transform: translateX(-50%) scale(0.95);
-        }
-        
         .preview-container {
             margin-top: 1.5rem;
             display: none;
@@ -945,14 +895,6 @@
             
             <div class="camera-controls">
                 <button class="camera-btn" id="takePhotoBtn">📷 Take Photo</button>
-                <button class="camera-btn" id="cameraBtn" style="display: none;">🎥 Use Live Camera</button>
-                <button class="camera-btn" id="closeCameraBtn" style="display: none;">❌ Close Camera</button>
-            </div>
-            
-            <div class="camera-container" id="cameraContainer">
-                <video id="cameraVideo" autoplay playsinline></video>
-                <button class="capture-btn" id="captureBtn">📸 Capture</button>
-                <canvas id="cameraCanvas" style="display: none;"></canvas>
             </div>
             
             <div class="preview-container" id="previewContainer">
@@ -1066,10 +1008,8 @@
     <div class="toast" id="toast"></div>
 
     <script>
-        // CONFIGURATION - Update your backend URL here
         const API_URL = 'https://yasz24-vigilance-backend.hf.space/api/predict';
         
-        // Generate animated particles
         const particlesContainer = document.getElementById('particles');
         for (let i = 0; i < 30; i++) {
             const particle = document.createElement('div');
@@ -1080,7 +1020,6 @@
             particlesContainer.appendChild(particle);
         }
         
-        // Animated counter for stats
         function animateCounter(element) {
             const target = parseFloat(element.getAttribute('data-target'));
             const duration = 2000;
@@ -1098,7 +1037,6 @@
             }, 16);
         }
         
-        // Animate stats on page load
         window.addEventListener('load', () => {
             const statNumbers = document.querySelectorAll('.stat-number');
             setTimeout(() => {
@@ -1106,7 +1044,6 @@
             }, 800);
         });
         
-        // Navbar scroll effect
         window.addEventListener('scroll', () => {
             const navbar = document.getElementById('navbar');
             if (window.scrollY > 50) {
@@ -1116,7 +1053,6 @@
             }
         });
         
-        // Toast notification
         function showToast(message, type = 'success') {
             const toast = document.getElementById('toast');
             toast.textContent = message;
@@ -1126,22 +1062,13 @@
             }, 3000);
         }
         
-        // Elements
         const uploadZone = document.getElementById('uploadZone');
         const fileInput = document.getElementById('fileInput');
         const previewContainer = document.getElementById('previewContainer');
         const previewImage = document.getElementById('previewImage');
         const analyzeBtn = document.getElementById('analyzeBtn');
         const takePhotoBtn = document.getElementById('takePhotoBtn');
-        const cameraBtn = document.getElementById('cameraBtn');
-        const closeCameraBtn = document.getElementById('closeCameraBtn');
-        const cameraContainer = document.getElementById('cameraContainer');
-        const cameraVideo = document.getElementById('cameraVideo');
-        const captureBtn = document.getElementById('captureBtn');
-        const cameraCanvas = document.getElementById('cameraCanvas');
-        let stream = null;
 
-        // Upload zone handlers - Gallery upload
         uploadZone.addEventListener('click', () => fileInput.click());
         
         uploadZone.addEventListener('dragover', (e) => {
@@ -1163,12 +1090,11 @@
             handleFile(e.target.files[0]);
         });
 
-        // Take Photo button - Opens camera directly on mobile
         takePhotoBtn.addEventListener('click', () => {
             const input = document.createElement('input');
             input.type = 'file';
             input.accept = 'image/*';
-            input.capture = 'environment'; // This triggers camera on mobile
+            input.capture = 'environment';
             input.onchange = (e) => {
                 handleFile(e.target.files[0]);
             };
@@ -1197,64 +1123,6 @@
             reader.readAsDataURL(file);
         }
 
-        // Live Camera handlers (optional feature - currently hidden)
-        cameraBtn.addEventListener('click', async () => {
-            try {
-                stream = await navigator.mediaDevices.getUserMedia({
-                    video: { facingMode: 'environment', width: 1280, height: 720 }
-                });
-                cameraVideo.srcObject = stream;
-                cameraVideo.onloadedmetadata = () => {
-                    cameraVideo.play();
-                    cameraContainer.classList.add('active');
-                    cameraBtn.style.display = 'none';
-                    closeCameraBtn.style.display = 'block';
-                    previewContainer.classList.remove('active');
-                    showToast('Camera activated', 'success');
-                };
-            } catch (err) {
-                try {
-                    stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                    cameraVideo.srcObject = stream;
-                    cameraVideo.onloadedmetadata = () => {
-                        cameraVideo.play();
-                        cameraContainer.classList.add('active');
-                        cameraBtn.style.display = 'none';
-                        closeCameraBtn.style.display = 'block';
-                    };
-                } catch (e) {
-                    showToast('Camera access denied', 'error');
-                }
-            }
-        });
-        
-        closeCameraBtn.addEventListener('click', stopCamera);
-        
-        captureBtn.addEventListener('click', () => {
-            if (cameraVideo.readyState === cameraVideo.HAVE_ENOUGH_DATA) {
-                cameraCanvas.width = cameraVideo.videoWidth;
-                cameraCanvas.height = cameraVideo.videoHeight;
-                cameraCanvas.getContext('2d').drawImage(cameraVideo, 0, 0);
-                previewImage.src = cameraCanvas.toDataURL('image/jpeg', 0.95);
-                previewContainer.classList.add('active');
-                stopCamera();
-                showToast('Photo captured!', 'success');
-            } else {
-                showToast('Camera still loading, please wait...', 'error');
-            }
-        });
-        
-        function stopCamera() {
-            if (stream) {
-                stream.getTracks().forEach(track => track.stop());
-                stream = null;
-            }
-            cameraContainer.classList.remove('active');
-            cameraBtn.style.display = 'block';
-            closeCameraBtn.style.display = 'none';
-        }
-
-        // Analysis function - UPDATED VERSION WITH FRUIT/VEGGIE VALIDATION
         analyzeBtn.addEventListener('click', analyzeImage);
 
         async function analyzeImage() {
@@ -1300,15 +1168,11 @@
                 }
                 
                 const result = await response.json();
-                console.log('API Response:', result);
-                console.log('Classification received:', result.classification);
                 
-                // FRUIT/VEGGIE VALIDATION - Reject non-food items
                 if (result.error || result.status === 'error') {
                     throw new Error(result.error || 'Analysis failed');
                 }
                 
-                // Check if it's actually a fruit or vegetable
                 const validCategories = [
                     'apple', 'banana', 'orange', 'potato', 'tomato', 'carrot',
                     'grape', 'strawberry', 'watermelon', 'mango', 'pineapple',
@@ -1341,7 +1205,6 @@
                 }, 500);
                 
             } catch (error) {
-                console.error('Error:', error);
                 clearInterval(progressInterval);
                 document.getElementById('loadingIndicator').classList.remove('active');
                 document.getElementById('progressBar').classList.remove('active');
@@ -1409,86 +1272,85 @@
             }, 16);
         }
         
-        // Sample card click handlers
         const sampleCards = document.querySelectorAll('.sample-card');
         const sampleData = {
-            0: { // Fresh Apple
+            0: {
                 status: 'optimal',
-                classification: 'Fresh Apple - Grade A',
+                classification: 'PREMIUM GRADE - Fresh',
                 quality_score: 94.5,
                 confidence: 98.2,
                 safety_grade: 'A+',
                 recommendation: {
-                    title: 'Safe to Consume',
+                    title: 'Approved for Procurement',
                     message: 'Excellent quality detected. This apple shows optimal freshness indicators with vibrant color and firm texture.',
                     color: '#10b981'
                 },
-                storage_protocol: 'Store in refrigerator crisper drawer at 32-40°F. Can last 4-6 weeks under proper conditions.'
+                storage_protocol: 'Ambient storage acceptable. Standard shelf life expected. Monitor periodically for changes.'
             },
-            1: { // Rotten Banana
+            1: {
                 status: 'compromised',
-                classification: 'Rotten Banana - Unsafe',
+                classification: 'REJECTED - Rotten',
                 quality_score: 23.1,
                 confidence: 95.7,
                 safety_grade: 'F',
                 recommendation: {
-                    title: 'Do Not Consume',
+                    title: 'Quality Failure - Do Not Purchase',
                     message: 'Significant degradation detected. Advanced spoilage indicators present. Dispose immediately to prevent contamination.',
                     color: '#ef4444'
                 },
-                storage_protocol: 'Item has exceeded safe storage duration. Discard and sanitize storage area.'
+                storage_protocol: 'Immediate disposal required. Do not consume under any circumstances. Potential health hazard.'
             },
-            2: { // Fresh Orange
+            2: {
                 status: 'optimal',
-                classification: 'Fresh Orange - Grade A',
+                classification: 'PREMIUM GRADE - Fresh',
                 quality_score: 91.8,
                 confidence: 96.4,
                 safety_grade: 'A',
                 recommendation: {
-                    title: 'Safe to Consume',
+                    title: 'Approved for Procurement',
                     message: 'High quality citrus fruit with optimal ripeness. Excellent vitamin C content expected.',
                     color: '#10b981'
                 },
-                storage_protocol: 'Store at room temperature for up to 1 week, or refrigerate for 2-3 weeks.'
+                storage_protocol: 'Ambient storage acceptable. Standard shelf life expected. Monitor periodically for changes.'
             },
-            3: { // Fresh Potato
+            3: {
                 status: 'optimal',
-                classification: 'Fresh Potato - Grade A',
+                classification: 'PREMIUM GRADE - Fresh',
                 quality_score: 89.3,
                 confidence: 93.8,
                 safety_grade: 'A',
                 recommendation: {
-                    title: 'Safe to Consume',
+                    title: 'Approved for Procurement',
                     message: 'Firm texture with no sprouting detected. Good for cooking and consumption.',
                     color: '#10b981'
                 },
-                storage_protocol: 'Store in cool, dark, dry place at 45-50°F. Avoid refrigeration. Lasts 2-3 months.'
+                storage_protocol: 'Ambient storage acceptable. Standard shelf life expected. Monitor periodically for changes.'
             },
-            4: { // Rotten Tomato
+            4: {
                 status: 'compromised',
-                classification: 'Rotten Tomato - Unsafe',
+                classification: 'REJECTED - Rotten',
                 quality_score: 18.7,
                 confidence: 97.1,
                 safety_grade: 'F',
                 recommendation: {
-                    title: 'Do Not Consume',
+                    title: 'Quality Failure - Do Not Purchase',
                     message: 'Severe degradation with visible mold indicators. High risk of bacterial contamination.',
                     color: '#ef4444'
                 },
-                storage_protocol: 'Item is beyond salvageable state. Dispose in sealed container immediately.'
+                storage_protocol: 'Immediate disposal required. Do not consume under any circumstances. Potential health hazard.'
             },
-            5: { // Fresh Carrot
+            5: {
                 status: 'optimal',
-                classification: 'Fresh Carrot - Grade A',
+                classification: 'PREMIUM GRADE - Fresh',
                 quality_score: 92.6,
                 confidence: 94.5,
                 safety_grade: 'A',
                 recommendation: {
-                    title: 'Safe to Consume',
+                    title: 'Approved for Procurement',
                     message: 'Crisp texture with vibrant color. High nutritional value maintained.',
                     color: '#10b981'
                 },
-                storage_protocol: 'Store in refrigerator crisper drawer, preferably in plastic bag. Lasts 3-4 weeks.'
+                storage_protocol: 'Ambient storage acceptable. Standard shelf life expected. Monitor periodically for changes.'
             }
         };
         
@@ -1496,7 +1358,6 @@
             card.addEventListener('click', () => {
                 showToast('Loading sample analysis...', 'success');
                 
-                // Simulate loading
                 document.getElementById('resultsPlaceholder').style.display = 'none';
                 document.getElementById('resultsContent').classList.remove('active');
                 document.getElementById('loadingIndicator').classList.add('active');
@@ -1506,13 +1367,11 @@
                     document.getElementById('loadingIndicator').classList.remove('active');
                     showToast('Sample analysis loaded!', 'success');
                     
-                    // Scroll to results
                     document.getElementById('analyze').scrollIntoView({ behavior: 'smooth' });
                 }, 1000);
             });
         });
         
-        // Keyboard shortcuts
         document.addEventListener('keydown', (e) => {
             if (e.key === 'u' || e.key === 'U') {
                 fileInput.click();
@@ -1522,7 +1381,6 @@
             }
         });
         
-        // Click ripple effect
         document.addEventListener('click', (e) => {
             const ripple = document.createElement('div');
             ripple.style.position = 'fixed';
@@ -1555,7 +1413,7 @@
         `;
         document.head.appendChild(rippleStyle);
         
-        console.log('%c⚡ VIGILANCE.AI', 'background: linear-gradient(135deg, #8b5cf6, #3b82f6); color: white; font-size: 20px; font-weight: bold; padding: 10px 20px; border-radius: 5px;');
+        console.log('%c⚡ VIGILANCE.AI v2.0', 'background: linear-gradient(135deg, #8b5cf6, #3b82f6); color: white; font-size: 20px; font-weight: bold; padding: 10px 20px; border-radius: 5px;');
         console.log('%cKeyboard Shortcuts: U = Upload | A = Analyze', 'color: #8b5cf6; font-size: 12px;');
     </script>
 </body>
